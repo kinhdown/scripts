@@ -116,6 +116,9 @@ async function jdPlantBean() {
     }
   } catch (e) {
     $.logErr(e);
+    const errMsg = `京东账号${$.index} ${$.nickName || $.UserName}\n任务执行异常，请检查执行日志 ‼️‼️`;
+    if ($.isNode()) await notify.sendNotify(`${$.name}`, errMsg);
+    $.msg($.name, '', `京东账号${$.index} ${$.nickName || $.UserName}\n${errMsg}`)
   }
 }
 async function doGetReward() {
@@ -152,7 +155,7 @@ async function doCultureBean() {
     const plantBeanRound = $.plantBeanIndexResult.data.roundList[1]
     if (plantBeanRound.roundState === '2') {
       //收取营养液
-      console.log(`开始收取营养液`)
+      if (plantBeanRound.bubbleInfos && plantBeanRound.bubbleInfos.length) console.log(`开始收取营养液`)
       for (let bubbleInfo of plantBeanRound.bubbleInfos) {
         console.log(`收取-${bubbleInfo.name}-的营养液`)
         await cultureBean(plantBeanRound.roundId, bubbleInfo.nutrientsType)
@@ -676,7 +679,7 @@ function TotalBean() {
         "Connection": "keep-alive",
         "Cookie": cookie,
         "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
+        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1")
       },
       "timeout": 10000,
     }
@@ -741,7 +744,7 @@ function taskUrl(function_id, body) {
       "Host": "api.m.jd.com",
       "Accept": "*/*",
       "Connection": "keep-alive",
-      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
       "Accept-Language": "zh-Hans-CN;q=1,en-CN;q=0.9",
       "Accept-Encoding": "gzip, deflate, br",
       "Content-Type": "application/x-www-form-urlencoded"

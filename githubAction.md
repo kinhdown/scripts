@@ -31,7 +31,9 @@
 | `PUSH_PLUS_USER`  |                         pushplus推送                         | 非必须 | 一对多推送的“群组编码”（一对多推送下面->您的群组(如无则新建)->群组编码）注:(1、需订阅者扫描二维码 2、如果您是创建群组所属人，也需点击“查看二维码”扫描绑定，否则不能接受群组消息推送)，只填`PUSH_PLUS_TOKEN`默认为一对一推送 |
 |  `TG_PROXY_HOST`  |                      Telegram 代理的 IP                      | 非必须 | 代理类型为 http。例子：http代理 http://127.0.0.1:1080 则填写 127.0.0.1 |
 |  `TG_PROXY_PORT`  |                     Telegram 代理的端口                      | 非必须 | 例子：http代理 http://127.0.0.1:1080 则填写 1080             |
+|  `TG_PROXY_AUTH`  |                     Telegram 代理的认证参数              | 非必须 | 代理的认证参数     |
 |  `TG_API_HOST`  |                      Telegram api自建的反向代理地址              | 非必须 | 例子：反向代理地址 http://aaa.bbb.ccc 则填写 aaa.bbb.ccc [简略搭建教程](https://shimo.im/docs/JD38CJDQtYy3yTd8/read)     |
+
 
 ##### 互助码类环境变量
 
@@ -65,7 +67,7 @@
 |    `DDQ_NOTIFY_CONTROL`    |     点点券<br>推送开关     | 非必须 | 控制点点券是否静默运行,<br>`false`为否(发送推送通知消息),`true`为是(即：不发送推送通知消息) |
 |    `JDZZ_NOTIFY_CONTROL`    |     京东赚赚小程序<br>推送开关     | 非必须 | 控制京东赚赚小程序是否静默运行,<br>`false`为否(发送推送通知消息),`true`为是(即：不发送推送通知消息) |
 |    `JD_JOY_REWARD_NOTIFY`    |  宠汪汪<br>兑换京豆推送开关  | 非必须 | 控制`jd_joy_reward.js`脚本是否静默运行,<br>`false`为否(发送推送通知消息),`true`为是(即：不发送推送通知消息) |
-|       `JOY_FEED_COUNT`       |        宠汪汪喂食数量        | 非必须 | 控制`jd_joy_feedPets.js`脚本喂食数量,可以填的数字10,20,40,80,其他数字不可. |
+|       `JOY_FEED_COUNT`       |        宠汪汪喂食数量        | 非必须 | 控制`jd_joy_feedPets.js`脚本喂食数量,可以填的数字0,10,20,40,80,其他数字不可. |
 |       `JOY_HELP_FEED`        |       宠汪汪帮好友喂食       | 非必须 | 控制`jd_joy_steal.js`脚本是否给好友喂食,`false`为否,`true`为是(给好友喂食) |
 |        `JOY_RUN_FLAG`        |        宠汪汪是否赛跑        | 非必须 | 控制`jd_joy.js`脚本是否参加赛跑(默认参加双人赛跑),<br>`false`为否,`true`为是，脚本默认是`true` |
 |       `JOY_TEAM_LEVEL`       | 宠汪汪<br>参加什么级别的赛跑 | 非必须 | 控制`jd_joy.js`脚本参加几人的赛跑,可选数字为`2`,`10`,`50`，<br>其中2代表参加双人PK赛，10代表参加10人突围赛，<br>50代表参加50人挑战赛(注：此项功能在`JOY_RUN_FLAG`为true的时候才生效)，<br>如若想设置不同账号参加不同类别的比赛则用&区分即可(如下三个账号：`2&10&50`) |

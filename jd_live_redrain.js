@@ -26,7 +26,7 @@ let bodyList = {
   }
 }
 let ids = {
-
+  
 }
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;

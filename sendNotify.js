@@ -2,10 +2,19 @@
  * @Author: lxk0301 https://gitee.com/lxk0301
  * @Date: 2020-08-19 16:12:40 
  * @Last Modified by: lxk0301
- * @Last Modified time: 2021-3-16 9:52:54
+ * @Last Modified time: 2021-4-3 16:00:54
+ */
+/**
+ * sendNotify 推送通知功能
+ * @param text 通知头
+ * @param desp 通知体
+ * @param params 某些推送通知方式点击弹窗可跳转, 例：{ url: 'https://abc.com' }
+ * @param author 作者仓库等信息  例：`本脚本免费使用 By：https://gitee.com/lxk0301/jd_docker`
+ * @returns {Promise<unknown>}
  */
 const querystring = require("querystring");
 const $ = new Env();
+const timeout = 15000;//超时时间(单位毫秒)
 // =======================================微信server酱通知设置区域===========================================
 //此处填你申请的SCKEY.
 //(环境变量名 PUSH_KEY)
@@ -28,14 +37,15 @@ let TG_USER_ID = '';
 //tg推送HTTP代理设置(不懂可忽略,telegram机器人通知推送功能中非必填)
 let TG_PROXY_HOST = '';//例如:127.0.0.1(环境变量名:TG_PROXY_HOST)
 let TG_PROXY_PORT = '';//例如:1080(环境变量名:TG_PROXY_PORT)
+let TG_PROXY_AUTH = '';//tg代理配置认证参数
 //Telegram api自建的反向代理地址(不懂可忽略,telegram机器人通知推送功能中非必填),默认tg官方api(环境变量名:TG_API_HOST)
 let TG_API_HOST = 'api.telegram.org'
 // =======================================钉钉机器人通知设置区域===========================================
 //此处填你钉钉 bot 的webhook，例如：5a544165465465645d0f31dca676e7bd07415asdasd
 //(环境变量名 DD_BOT_TOKEN)
-let DD_BOT_TOKEN = '9d0ef4435436d2141becb4af3d734c188172085c34dff094f8122585c33b334b';
+let DD_BOT_TOKEN = '';
 //密钥，机器人安全设置页面，加签一栏下面显示的SEC开头的字符串
-let DD_BOT_SECRET = 'SEC22ec5bbf3f70aff91b32ac9a70b94686ce5a010cd6659d0d10403ce69ffb529f';
+let DD_BOT_SECRET = '';
 
 // =======================================企业微信机器人通知设置区域===========================================
 //此处填你企业微信机器人的 webhook(详见文档 https://work.weixin.qq.com/api/doc/90000/90136/91770)，例如：693a91f6-7xxx-4bc4-97a0-0ec2sifa5aaa
@@ -101,6 +111,7 @@ if (process.env.TG_BOT_TOKEN) {
 if (process.env.TG_USER_ID) {
   TG_USER_ID = process.env.TG_USER_ID;
 }
+if (process.env.TG_PROXY_AUTH) TG_PROXY_AUTH = process.env.TG_PROXY_AUTH;
 if (process.env.TG_PROXY_HOST) TG_PROXY_HOST = process.env.TG_PROXY_HOST;
 if (process.env.TG_PROXY_PORT) TG_PROXY_PORT = process.env.TG_PROXY_PORT;
 if (process.env.TG_API_HOST) TG_API_HOST = process.env.TG_API_HOST;
@@ -132,10 +143,17 @@ if (process.env.PUSH_PLUS_USER) {
 }
 //==========================云端环境变量的判断与接收=========================
 
-
-async function sendNotify(text, desp, params = {}) {
+/**
+ * sendNotify 推送通知功能
+ * @param text 通知头
+ * @param desp 通知体
+ * @param params 某些推送通知方式点击弹窗可跳转, 例：{ url: 'https://abc.com' }
+ * @param author 作者仓库等信息  例：`本脚本免费使用 By：https://gitee.com/lxk0301/jd_docker`
+ * @returns {Promise<unknown>}
+ */
+async function sendNotify(text, desp, params = {}, author = '\n\n本脚本免费使用 By：https://gitee.com/lxk0301/jd_docker') {
   //提供6种通知
-  desp += `\n\n本脚本开源免费使用 By：https://gitee.com/lxk0301/jd_docker`;
+  desp += author;//增加作者信息，防止被贩卖等
   await Promise.all([
     serverNotify(text, desp),//微信server酱
     pushPlusNotify(text, desp)//pushplus(推送加)
@@ -153,7 +171,7 @@ async function sendNotify(text, desp, params = {}) {
   ])
 }
 
-function serverNotify(text, desp, timeout = 2100) {
+function serverNotify(text, desp, time = 2100) {
   return  new Promise(resolve => {
     if (SCKEY) {
       //微信server酱推送通知一个\n不会换行，需要两个\n才能换行，故做此替换
@@ -163,7 +181,8 @@ function serverNotify(text, desp, timeout = 2100) {
         body: `text=${text}&desp=${desp}`,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        },
+        timeout
       }
       setTimeout(() => {
         $.post(options, (err, resp, data) => {
@@ -189,9 +208,9 @@ function serverNotify(text, desp, timeout = 2100) {
             resolve(data);
           }
         })
-      }, timeout)
+      }, time)
     } else {
-      console.log('您未提供server酱的SCKEY，取消微信推送消息通知🚫\n');
+      console.log('\n\n您未提供server酱的SCKEY，取消微信推送消息通知🚫\n');
       resolve()
     }
   })
@@ -278,7 +297,8 @@ function BarkNotify(text, desp, params={}) {
         url: `${BARK_PUSH}/${encodeURIComponent(text)}/${encodeURIComponent(desp)}?sound=${BARK_SOUND}&${querystring.stringify(params)}`,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        },
+        timeout
       }
       $.get(options, (err, resp, data) => {
         try {
@@ -309,13 +329,13 @@ function BarkNotify(text, desp, params={}) {
 function tgBotNotify(text, desp) {
   return  new Promise(resolve => {
     if (TG_BOT_TOKEN && TG_USER_ID) {
-      desp = `${desp.replace(/_/g, "\\_")}`;//支持markdown后，带有_会导致推送失败，转义一下
       const options = {
         url: `https://${TG_API_HOST}/bot${TG_BOT_TOKEN}/sendMessage`,
-        body: `chat_id=${TG_USER_ID}&text=${text}\n\n${desp}&disable_web_page_preview=true&parse_mode=Markdown`,
+        body: `chat_id=${TG_USER_ID}&text=${text}\n\n${desp}&disable_web_page_preview=true`,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        },
+        timeout
       }
       if (TG_PROXY_HOST && TG_PROXY_PORT) {
         const tunnel = require("tunnel");
@@ -323,7 +343,8 @@ function tgBotNotify(text, desp) {
           https: tunnel.httpsOverHttp({
             proxy: {
               host: TG_PROXY_HOST,
-              port: TG_PROXY_PORT * 1
+              port: TG_PROXY_PORT * 1,
+              proxyAuth: TG_PROXY_AUTH
             }
           })
         }
@@ -368,7 +389,8 @@ function ddBotNotify(text, desp) {
       },
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      timeout
     }
     if (DD_BOT_TOKEN && DD_BOT_SECRET) {
       const crypto = require('crypto');
@@ -436,6 +458,7 @@ function qywxBotNotify(text, desp) {
       headers: {
         'Content-Type': 'application/json',
       },
+      timeout
     };
     if (QYWX_KEY) {
       $.post(options, (err, resp, data) => {
@@ -496,6 +519,7 @@ function qywxamNotify(text, desp) {
         headers: {
           'Content-Type': 'application/json',
         },
+        timeout
       };
       $.post(options_accesstoken, (err, resp, data) => {
         html = desp.replace(/\n/g, "<br/>")
@@ -606,7 +630,8 @@ function iGotNotify(text, desp, params={}){
         body: `title=${text}&content=${desp}&${querystring.stringify(params)}`,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        },
+        timeout
       }
       $.post(options, (err, resp, data) => {
         try {
@@ -649,7 +674,8 @@ function pushPlusNotify(text, desp) {
         body: JSON.stringify(body),
         headers: {
           'Content-Type': ' application/json'
-        }
+        },
+        timeout
       }
       $.post(options, (err, resp, data) => {
         try {

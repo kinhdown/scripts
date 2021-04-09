@@ -15,7 +15,7 @@
 
 开启抓包app后, Safari浏览器登录 https://bean.m.jd.com/bean/signIndex.action 点击签到并且出现签到日历后, 返回抓包app搜索关键字 functionId=signBean 复制请求头Cookie填入以下Key处的单引号内即可 */
 
-var Key = 'pt_key=AAJgSHxFADDrpzFgmsW5pEV2CsDWPzMSySLuSmyDecv9pUn0egI8VDpreBU8uOxUPfX9ZcZdPV4;pt_pin=%E7%81%AB%E6%98%9F%E5%B0%8F%E5%BC%9F'; //单引号内自行填写您抓取的Cookie
+var Key = 'pt_key=app_openAAJgbWG4ADB3cytbjkWPXTTqvGA8OIZglsmDceiTmhbn-D0PfxwyJPpoJOMsqcI7MHypAMAUXZU;pt_pin=jd_LYRLwSjIHNlp'; //单引号内自行填写您抓取的Cookie
 
 var DualKey = ''; //如需双账号签到,此处单引号内填写抓取的"账号2"Cookie, 否则请勿填写
 

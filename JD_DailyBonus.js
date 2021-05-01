@@ -2,7 +2,7 @@
 
 京东多合一签到脚本
 
-更新时间: 2021.04.28 12:30 v2.0.2
+更新时间: 2021.05.01 12:30 v2.0.3
 有效接口: 30+
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 电报频道: @NobyDa 
@@ -15,7 +15,7 @@
 
 开启抓包app后, Safari浏览器登录 https://bean.m.jd.com/bean/signIndex.action 点击签到并且出现签到日历后, 返回抓包app搜索关键字 functionId=signBean 复制请求头Cookie填入以下Key处的单引号内即可 */
 
-var Key = 'pt_key=AAJgcTE4ADDlsnOkZ2RuknhA0drIoERZQ05GkQDDtU20iYfBoqxJfVAkOScs-cicWUhlD-c-J44;pt_pin=%E7%81%AB%E6%98%9F%E5%B0%8F%E5%BC%9F;'; //单引号内自行填写您抓取的Cookie
+var Key = 'pt_key=AAJgcTGZADDN78BlQgp3wy-f7pMpk_yrKk_kdXirgxw6SAOJx0p_E9h-PXpVRg5LkOMrxOb7fQc;pt_pin=jd_LYRLwSjIHNlp'; //单引号内自行填写您抓取的Cookie
 
 var DualKey = ''; //如需双账号签到,此处单引号内填写抓取的"账号2"Cookie, 否则请勿填写
 
@@ -832,7 +832,7 @@ function JDUserSign1(s, key, title, body) {
 async function JDUserSign2(s, key, title, tid) {
   await new Promise(resolve => {
     $nobyda.get({
-      url: `https://jdjoy.jd.com/api/turncard/channel/detail?turnTableId=${tid}&invokeKey=Y8ilh089tGf0TNNF`,
+      url: `https://jdjoy.jd.com/api/turncard/channel/detail?turnTableId=${tid}&invokeKey=SkzHkBfmSJdn5rQS`,
       headers: {
         Cookie: KEY
       }
@@ -844,7 +844,7 @@ async function JDUserSign2(s, key, title, tid) {
   return new Promise(resolve => {
     setTimeout(() => {
       const JDUrl = {
-        url: 'https://jdjoy.jd.com/api/turncard/channel/sign?invokeKey=Y8ilh089tGf0TNNF',
+        url: 'https://jdjoy.jd.com/api/turncard/channel/sign?invokeKey=SkzHkBfmSJdn5rQS',
         headers: {
           Cookie: KEY
         },
